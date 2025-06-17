@@ -1,88 +1,132 @@
 <script setup>
-import { onActivated, ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { onActivated, ref, onMounted, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
 
 
-const activeLink = ref('')
+const route = useRoute()
+// const isVisible = ref(false)
 
 
+const isDropDownOpen = ref(false);
+const isEssential = ref(false);
+
+
+
+onMounted (() => {
+    const storedState = localStorage.getItem('dropdownState')
+    isDropDownOpen.value = storedState === 'true'
+})
+
+watch(isDropDownOpen, (newVal) => {
+    localStorage.setItem('dropdownState', newVal)
+})
+
+
+onMounted (() => {
+    const storedState = localStorage.getItem('dropdownState')
+    isEssential.value = storedState === 'true'
+})
+
+watch(isEssential, (newVal) => {
+    localStorage.setItem('dropdownState', newVal)
+})
+
+
+
+
+function isActive(path) {
+    return route.path === path
+    
+}
+
+// function toggle() {
+//     isVisible.value = !isVisible.value
+// }
 </script>
+
+
+
 
 
 
 <template>
     <div class="flex w-screen h-screen">
         <div class="flex">
-            <aside class="w-100 bg-black">
+            <aside class="w-70 bg-black">
                 <nav class="text-gray-400 ml-13 p-3">
                     <div class="hover:text-white">
-                        <h1>Getting Started</h1>
+                        <h1 @click="isDropDownOpen = !isDropDownOpen">Getting Started</h1>
                         <hr class="w-30"><br>
                     </div>
-                    <RouterLink to="/side/intro">
-                        <p :class="{ 'text-green-700': activeLink === 'intro', 'hover:text-gray-300': activeLink !== 'intro' }"
-                            @click="activeLink = 'intro'"> Introduction</p>
-                    </RouterLink>
-                    <RouterLink to="/side/Quickstart">
-                        <p :class="{ 'text-green-700': activeLink === 'quickstart', 'hover:text-gray-300': activeLink !== 'quickstrat' }"
-                            @click="activeLink = 'quickstart'">Quick Start</p><br>
-                    </RouterLink>
-                    <div class="hover:text-white">
-                        <h2>Essential</h2>
-                        <hr class="w-20"><br>
+                    <div v-if="isDropDownOpen">
+                        <RouterLink to="/side/intro"
+                            :class="isActive('/side/intro') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Introduction</p>
+                        </RouterLink>
+                        <RouterLink to="/side/quickstart"
+                            :class="isActive('/side/quickstart') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Quick Start</p><br>
+                        </RouterLink>
                     </div>
-                    <RouterLink to="/side/create-an-app">
-                        <p :class="{ 'text-green-700': activeLink === 'create-an-app', 'hover:text-gray-300': activeLink !== 'create-an-app' }"
-                            @click="activeLink = 'create-an-app'">Creating an Application</p>
-                    </RouterLink>
-                    <RouterLink to="/side/reactivity-fund">
-                        <p :class="{ 'text-green-700': activeLink === 'reactivity-fund', 'hover:text-gray-300': activeLink !== 'reactivity-fund' }"
-                            @click="activeLink = 'reactivity-fund'">Reactivity Fundamental</p>
-                    </RouterLink>
-                    <RouterLink to="/side/computed-prop">
-                        <p :class="{ 'text-green-700': activeLink === 'computed-prop', 'hover:text-gray-300': activeLink !== 'computed-prop' }"
-                            @click="activeLink = 'computed-prop'">Computed Properties</p>
-                    </RouterLink>
-                    <RouterLink to="/side/class-and-style">
-                        <p :class="{ 'text-green-700': activeLink === 'class-and-app', 'hover:text-gray-300': activeLink !== 'class-and-app' }"
-                            @click="activeLink = 'class-and-app'">Class And Style</p>
-                    </RouterLink>
-                    <RouterLink to="/side/condition-rend">
-                        <p :class="{ 'text-green-700': activeLink === 'condition-rend', 'hover:text-gray-300': activeLink !== 'condition-rend' }"
-                            @click="activeLink = 'condition-rend'">Conditional Rendering </p>
-                    </RouterLink>
-                    <RouterLink to="/side/list-rend">
-                        <p :class="{ 'text-green-700': activeLink === 'list-rend', 'hover:text-gray-300': activeLink !== 'list-rend' }"
-                            @click="activeLink = 'list-rend'">List Rendering</p><br>
-                    </RouterLink>
+                    <div class="cursor-pointer">
+                        <h2 @click="isEssential = !isEssential">Essential</h2>
+                        <hr class="w-20"><br>
+                        <div v-if="isEssential">
+                            <RouterLink to="/side/create-an-app"
+                                :class="isActive('/side/create-an-app') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>Creating an Application</p>
+                            </RouterLink>
+                            <RouterLink to="/side/reactivity-fund"
+                                :class="isActive('/side/reactivity-fund') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>Reactivity Fundamental</p>
+                            </RouterLink>
+                            <RouterLink to="/side/computed-prop"
+                                :class="isActive('/side/computed-prop') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>Computed Properties</p>
+                            </RouterLink>
+                            <RouterLink to="/side/class-and-style"
+                                :class="isActive('/side/class-and-style') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>Class And Style</p>
+                            </RouterLink>
+                            <RouterLink to="/side/condition-rend"
+                                :class="isActive('/side/condition-rend') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>Conditional Rendering </p>
+                            </RouterLink>
+                            <RouterLink to="/side/list-rend"
+                                :class="isActive('/side/list-rend') ? 'text-green-700' : 'hover:text-gray-300'">
+                                <p>List Rendering</p><br>
+                            </RouterLink>
+                        </div>
+                    </div>
                     <div class="hover:text-white">
                         <h2>Component In-Depth</h2>
                         <hr class="w-40"><br>
                     </div>
-                    <RouterLink to="/side/registration">
-                        <p :class="{ 'text-green-700': activeLink === 'registration', 'hover:text-gray-300': activeLink !== 'registration' }"
-                            @click="activeLink = 'registration'">Registration</p>
+                    <RouterLink to="/side/registration"
+                        :class="isActive('/side/registration') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Registration</p>
                     </RouterLink>
-                    <RouterLink to="/side/props">
-                        <p :class="{ 'text-green-700': activeLink === 'props', 'hover:text-gray-300': activeLink !== 'prors' }"
-                            @click="activeLink = 'props'">Props</p>
+                    <RouterLink to="/side/props"
+                        :class="isActive('/side/props') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Props</p>
                     </RouterLink>
-                    <RouterLink to="/side/events">
-                        <p :class="{ 'text-green-700': activeLink === 'events', 'hover:text-gray-300': activeLink !== 'events' }"
-                            @click="activeLink = 'events'">Events</p>
+                    <RouterLink to="/side/events"
+                        :class="isActive('/side/events') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Events</p>
                     </RouterLink>
-                    <RouterLink to="/side/comp-v-model">
-                        <p :class="{ 'text-green-700': activeLink === 'comp-v-model', 'hover:text-gray-300': activeLink !== 'comp-v-model' }"
-                            @click="activeLink = 'comp-v-model'">Components v-model</p>
+                    <RouterLink to="/side/comp-v-model"
+                        :class="isActive('/side/comp-v-model') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Components v-model</p>
                     </RouterLink>
-                    <RouterLink to="/side/fallthrough-att">
-                        <p :class="{ 'text-green-700': activeLink === 'fallthrough-att', 'hover:text-gray-300': activeLink !== 'fallthrough-att' }"
-                            @click="activeLink = 'fallthrough-att'">Fallthrough Attributes</p>
+                    <RouterLink to="/side/fallthrough-att"
+                        :class="isActive('/side/fallthrough-att') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Fallthrough Attributes</p>
                     </RouterLink>
-                    <RouterLink to="/side/slots">
-                        <p :class="{ 'text-green-700': activeLink === 'slots', 'hover:text-gray-300': activeLink !== 'slots' }"
-                            @click="activeLink = 'slots'">Slots</p>
-                    </RouterLink>
+                    <RouterLink to="/side/slots"
+                        :class="isActive('/side/slots') ? 'text-green-700' : 'hover:text-gray-300'">
+                        <p>Slots</p>
+                    </RouterLink><br>
+
                 </nav>
             </aside>
         </div>
@@ -97,4 +141,3 @@ const activeLink = ref('')
 
 
 </template>
-

@@ -17,6 +17,9 @@ import ComputedProp from "@/components/Essential/computed-prop.vue";
 import ClassAndStyle from "@/components/Essential/class-and-style.vue";
 import Events from "@/components/Component-In_depth/events.vue";
 import Intro from "@/components/gettingStarted/intro.vue";
+import Feedback from "@/components/select/feedback.vue";
+import Contact from "@/components/select/contact.vue";
+
 
 
 const routes = [
@@ -87,12 +90,25 @@ const routes = [
                 path: 'slots',
                 component: Slots
             },
+            {
+                path: 'feedback',
+                component: Feedback
+            },
+            {
+                path: 'contact',
+                component: Contact
+            }
         ]
-
+        
     },
+    // {
+    //     path:'/feedback/',
+    //     name: 'feedback',
+    //     component: Feedback
+    // },
     {
         path: '/footer/',
-        anme: 'footer',
+        name: 'footer',
         component: footer
     }
 ]

@@ -1,7 +1,9 @@
-<script setup></script>
+<script setup>
+import { RouterView } from 'vue-router';
+</script>
 
 <template>
-    <!-- <footer class="bg-blue-300 w-100%">
+    <footer class="bg-blue-300 w-100%">
         <div class="p-10 w-250">
             <form action="">
                 <div>
@@ -21,7 +23,8 @@
         <div class="flex justify-end  text-3xl p-7">
             <p>doc</p>
         </div>
-    </footer> -->
+    </footer>
+    <RouterView></RouterView>
 
 
 

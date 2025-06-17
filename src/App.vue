@@ -17,7 +17,7 @@ import Side from './components/side.vue';
     <Header />
   </div>
   <Side /> 
-  <RouterView />
+  <!-- <RouterView /> -->
 </template>
 
 
