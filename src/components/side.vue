@@ -4,44 +4,76 @@ import { RouterLink, useRoute } from 'vue-router';
 
 
 const route = useRoute()
-// const isVisible = ref(false)
-
-
-const isDropDownOpen = ref(false);
-const isEssential = ref(false);
 
 
 
-onMounted (() => {
-    const storedState = localStorage.getItem('dropdownState')
-    isDropDownOpen.value = storedState === 'true'
-})
-
-watch(isDropDownOpen, (newVal) => {
-    localStorage.setItem('dropdownState', newVal)
-})
+const isDropDownOpen = useDropdown('gettingDropDownState')
+const isEssential = useDropdown('essentialDropDownState')
+const isComponent = useDropdown('componentDropDownState')
 
 
-onMounted (() => {
-    const storedState = localStorage.getItem('dropdownState')
-    isEssential.value = storedState === 'true'
-})
 
-watch(isEssential, (newVal) => {
-    localStorage.setItem('dropdownState', newVal)
-})
+// const isDropDownOpen = ref(true);
+// const isEssential = ref(true);
+
+
+
+// onMounted(() => {
+//     const storedState = localStorage.getItem('gettingDropDownState')
+//     isDropDownOpen.value = storedState === 'true'
+// })
+
+// watch(isDropDownOpen, (newVal) => {
+//     localStorage.setItem('gettingDropDownState', newVal)
+// })
+
+
+// onMounted(() => {
+//     const storedState = localStorage.getItem('essentialDropDownState')
+//     isEssential.value = storedState === 'true'
+// })
+
+// watch(isEssential, (newVal) => {
+//     localStorage.setItem('essentialDropDownState', newVal)
+// })
+// onMounted(() => {
+//     const storedState = localStorage.getItem('componentDropDownState')
+//     isEssential.value = storedState === 'true'
+// })
+
+// watch(isComponent, (newVal) => {
+//     localStorage.setItem('componentDropDownState', newVal)
+// })
+
+
+
+
+
+
+function useDropdown(dropDown, defaultValue = false) {
+    const state = ref(defaultValue)
+
+    onMounted(() => {
+        const stored = localStorage.getItem(dropDown)
+        if (stored !== null) {
+            state.value = stored === 'true'
+        }
+    })
+
+    watch(state, (newVal) => {
+        localStorage.setItem(dropDown, newVal)
+    })
+
+    return state
+}
 
 
 
 
 function isActive(path) {
     return route.path === path
-    
-}
 
-// function toggle() {
-//     isVisible.value = !isVisible.value
-// }
+}
 </script>
 
 
@@ -55,10 +87,10 @@ function isActive(path) {
             <aside class="w-70 bg-black">
                 <nav class="text-gray-400 ml-13 p-3">
                     <div class="hover:text-white">
-                        <h1 @click="isDropDownOpen = !isDropDownOpen">Getting Started</h1>
+                        <button @click="isDropDownOpen = !isDropDownOpen">Getting Started</button>
                         <hr class="w-30"><br>
                     </div>
-                    <div v-if="isDropDownOpen">
+                    <div v-show="isDropDownOpen">
                         <RouterLink to="/side/intro"
                             :class="isActive('/side/intro') ? 'text-green-700' : 'hover:text-gray-300'">
                             <p>Introduction</p>
@@ -71,7 +103,7 @@ function isActive(path) {
                     <div class="cursor-pointer">
                         <h2 @click="isEssential = !isEssential">Essential</h2>
                         <hr class="w-20"><br>
-                        <div v-if="isEssential">
+                        <div v-show="isEssential">
                             <RouterLink to="/side/create-an-app"
                                 :class="isActive('/side/create-an-app') ? 'text-green-700' : 'hover:text-gray-300'">
                                 <p>Creating an Application</p>
@@ -99,33 +131,35 @@ function isActive(path) {
                         </div>
                     </div>
                     <div class="hover:text-white">
-                        <h2>Component In-Depth</h2>
+                        <h2 @click="isComponent = !isComponent">Component In-Depth</h2>
                         <hr class="w-40"><br>
                     </div>
-                    <RouterLink to="/side/registration"
-                        :class="isActive('/side/registration') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Registration</p>
-                    </RouterLink>
-                    <RouterLink to="/side/props"
-                        :class="isActive('/side/props') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Props</p>
-                    </RouterLink>
-                    <RouterLink to="/side/events"
-                        :class="isActive('/side/events') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Events</p>
-                    </RouterLink>
-                    <RouterLink to="/side/comp-v-model"
-                        :class="isActive('/side/comp-v-model') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Components v-model</p>
-                    </RouterLink>
-                    <RouterLink to="/side/fallthrough-att"
-                        :class="isActive('/side/fallthrough-att') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Fallthrough Attributes</p>
-                    </RouterLink>
-                    <RouterLink to="/side/slots"
-                        :class="isActive('/side/slots') ? 'text-green-700' : 'hover:text-gray-300'">
-                        <p>Slots</p>
-                    </RouterLink><br>
+                    <div v-show="isComponent">
+                        <RouterLink to="/side/registration"
+                            :class="isActive('/side/registration') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Registration</p>
+                        </RouterLink>
+                        <RouterLink to="/side/props"
+                            :class="isActive('/side/props') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Props</p>
+                        </RouterLink>
+                        <RouterLink to="/side/events"
+                            :class="isActive('/side/events') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Events</p>
+                        </RouterLink>
+                        <RouterLink to="/side/comp-v-model"
+                            :class="isActive('/side/comp-v-model') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Components v-model</p>
+                        </RouterLink>
+                        <RouterLink to="/side/fallthrough-att"
+                            :class="isActive('/side/fallthrough-att') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Fallthrough Attributes</p>
+                        </RouterLink>
+                        <RouterLink to="/side/slots"
+                            :class="isActive('/side/slots') ? 'text-green-700' : 'hover:text-gray-300'">
+                            <p>Slots</p>
+                        </RouterLink><br>
+                    </div>
 
                 </nav>
             </aside>

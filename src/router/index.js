@@ -24,11 +24,6 @@ import Contact from "@/components/select/contact.vue";
 
 const routes = [
     {
-        path: '/',
-        name: 'header',
-        component: header,
-    },
-    {
         path: '/side',
         children: [
 
